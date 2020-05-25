@@ -1,0 +1,12 @@
+#!/bin/bash
+# This is a convinence script to run Cargo from your CLI.
+# It utilises a common caching volume so that it doesn't have to keep downloading dependencies.
+#
+
+"$( dirname $0 )"/cargo build --release
+if [ $? -eq 0 ]; then
+    echo "Your binary file can be found under ""target/x86_64-unknown-linux-musl/release""."
+    exit 0
+fi
+
+exit 1

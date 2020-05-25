@@ -1,0 +1,22 @@
+#!/bin/bash
+# This is a convinence script to run Cargo from your CLI.
+# It utilises a common caching volume so that it doesn't have to keep downloading dependencies.
+#
+
+CARGO_CACHE_VOLUME="rust-cargo-registry-cache"
+CARGO_ENVIRONMENT_RUSTFLAG_FOR_RELEASE=""
+PARAMETER="$@"
+
+if [ "$1 $2" == "build --release" ]; then
+    CARGO_ENVIRONMENT_RUSTFLAG_FOR_RELEASE="-e RUSTFLAGS=-Clinker=musl-gcc"
+    PARAMETER="build --release --target=x86_64-unknown-linux-musl"
+fi
+
+docker run -it --rm \
+    -v "$( pwd )":/work \
+    -v "${CARGO_CACHE_VOLUME}":/usr/local/cargo/registry \
+    -w /work \
+    -e "USER=""${USER}""" \
+    ${CARGO_ENVIRONMENT_RUSTFLAG_FOR_RELEASE} \
+    magmanite/rust-build-environment-for-alpine \
+    cargo ${PARAMETER}
