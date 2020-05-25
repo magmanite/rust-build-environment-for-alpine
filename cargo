@@ -6,6 +6,7 @@
 CARGO_CACHE_VOLUME="rust-cargo-registry-cache"
 CARGO_ENVIRONMENT_RUSTFLAG_FOR_RELEASE=""
 PARAMETER="$@"
+DOCKER_USER="$( id -u):$( id -g )"
 
 if [ "$1 $2" == "build --release" ]; then
     CARGO_ENVIRONMENT_RUSTFLAG_FOR_RELEASE="-e RUSTFLAGS=-Clinker=musl-gcc"
@@ -17,6 +18,7 @@ docker run -it --rm \
     -v "${CARGO_CACHE_VOLUME}":/usr/local/cargo/registry \
     -w /work \
     -e "USER=""${USER}""" \
+    --user "${DOCKER_USER}" \
     ${CARGO_ENVIRONMENT_RUSTFLAG_FOR_RELEASE} \
     magmanite/rust-build-environment-for-alpine \
     cargo ${PARAMETER}
