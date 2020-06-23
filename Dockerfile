@@ -1,4 +1,4 @@
-FROM rust:1.44.0
+FROM rust:1.44.1
 
 RUN apt-get update \
     && apt-get install -y musl-tools \
